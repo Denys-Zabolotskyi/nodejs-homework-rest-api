@@ -1,15 +1,15 @@
-const { ctrlwrapper } = require("../utils");
-const { HttpError } = require("../../helpers");
-const contacts = require("../models/contacts");
+const { ctrlWrapper } = require("../utils");
+const { Contact } = require("../models/contact");
+const { HttpError } = require("../helpers");
 
 const getAllcontacts = async (req, res) => {
-  const result = await contacts.listContacts();
+  const result = await Contact.find();
   res.json(result);
 };
 
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await contacts.getContactById(contactId);
+  const result = await Contact.findById(contactId);
   if (!result) {
     throw HttpError(404, `Contact with contactId: '${contactId}' not found`);
   }
@@ -17,13 +17,13 @@ const getContactById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const result = await contacts.addContact(req.body);
+  const result = await Contact.create(req.body);
   res.status(201).json(result);
 };
 
 const deleteContactById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await contacts.removeContact(contactId);
+  const result = await Contact.findByIdAndDelete(contactId);
   if (!result) {
     throw HttpError(404, `Contact with contactId: '${contactId}' not found`);
   }
@@ -32,7 +32,20 @@ const deleteContactById = async (req, res) => {
 
 const updateContactById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await contacts.updateContact(contactId, req.body);
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
+  if (!result) {
+    throw HttpError(404, `Contact with contactId: '${contactId}' not found`);
+  }
+  res.json(result);
+};
+
+const updateFavoriteById = async (req, res) => {
+  const { contactId } = req.params;
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
   if (!result) {
     throw HttpError(404, `Contact with contactId: '${contactId}' not found`);
   }
@@ -40,9 +53,10 @@ const updateContactById = async (req, res) => {
 };
 
 module.exports = {
-  getAllcontacts: ctrlwrapper(getAllcontacts),
-  getContactById: ctrlwrapper(getContactById),
-  addContact: ctrlwrapper(addContact),
-  deleteContactById: ctrlwrapper(deleteContactById),
-  updateContactById: ctrlwrapper(updateContactById),
+  getAllcontacts: ctrlWrapper(getAllcontacts),
+  getContactById: ctrlWrapper(getContactById),
+  addContact: ctrlWrapper(addContact),
+  deleteContactById: ctrlWrapper(deleteContactById),
+  updateContactById: ctrlWrapper(updateContactById),
+  updateFavoriteById: ctrlWrapper(updateFavoriteById),
 };
