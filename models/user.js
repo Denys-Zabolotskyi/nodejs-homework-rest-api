@@ -22,6 +22,7 @@ const userSchema = Schema(
       minlength: 6,
       required: true,
     },
+    token: { type: String, default: "" },
   },
   { versionKey: false, timestaps: true }
 );
@@ -34,12 +35,12 @@ const registerSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-const signinSchema = Joi.object({
+const loginSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
 });
 
-const schemas = { registerSchema, signinSchema };
+const schemas = { registerSchema, loginSchema };
 
 const User = model("user", userSchema);
 
