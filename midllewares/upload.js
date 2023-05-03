@@ -10,8 +10,8 @@ const malterConfig = multer.diskStorage({
   },
 });
 
-const upload = {
+const upload = multer({
   storage: malterConfig,
-};
+});
 
 module.exports = upload;

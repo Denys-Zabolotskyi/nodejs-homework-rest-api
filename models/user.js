@@ -23,7 +23,7 @@ const userSchema = Schema(
       required: true,
     },
     token: { type: String, default: "" },
-    avatarUrl: {
+    avatarURL: {
       type: String,
       required: true,
       // required: true,
